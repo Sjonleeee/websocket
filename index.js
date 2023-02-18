@@ -23,7 +23,9 @@ io.on("connection", (socket) => {
     if (incomingName) {
       clients[socket.id].name = incomingName;
       socket.emit("name", incomingName);
+      return;
     }
+    socket.emit("name-error", "write your name");
   });
 
   // SOCKET MESSAGE
