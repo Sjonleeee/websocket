@@ -47,6 +47,7 @@
           placeholder="your name"
         />
         <button type="submit">Connect</button>
+        <span class="error"></span>
       </form>
     </div>
 
@@ -69,12 +70,15 @@
     const $msgForm = document.getElementById("msgForm");
     const $msgInput = document.getElementById("msgInput");
     const $messages = document.getElementById("messages");
+    
     const $screenName = document.getElementById("screenName");
-    const $screenMessage = document.getElementById("screenMessage");
-
+    
     // User
     const $nameForm = document.getElementById("nameForm");
     const $nameInput = document.getElementById("nameInput");
+    const $nameError = $screenName.querySelector('.error')
+    
+    const $screenMessage = document.getElementById("screenMessage");
 
     let socket; // will be assigned a value later
 
@@ -105,11 +109,22 @@
 
       socket.on("name", (client) => {
         console.log("Your are now named", client.name);
-        $screenMessage.classList.add("screen--visible");
+        showScreen($screenMessage);
       });
 
       $msgForm.addEventListener("submit", (e) => handleSubmit(e));
       $nameForm.addEventListener("submit", (e) => handleSubmit(e));
+
+      const showScreen = ($screen) => {
+        $screenName.classList.toggle(
+          "screen--visible",
+          $screen === $screenName
+        );
+        $screenMessage.classList.toggle(
+          "screen--visible",
+          $screen === $screenMessage
+        );
+      };
     };
 
     init();
