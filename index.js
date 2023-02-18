@@ -16,26 +16,22 @@ server.listen(port, () => {
 
 io.on("connection", (socket) => {
   console.log(`Connection`);
-  
-
   clients[socket.id] = { id: socket.id };
 
-  socket.on("name", (name) => {
-    console.log("name", name);
-    // TODO: name validation
-    clients[socket.id].name = name;
-    // send the name back as a confirmation
-    socket.emit("name", name);
+  // INCOMING NAME - Name of the input from the user
+  socket.on("name", (incomingName) => {
+    if (incomingName) {
+      clients[socket.id].name = incomingName;
+      socket.emit("name", incomingName);
+    }
   });
 
-
+  // SOCKET MESSAGE
   socket.on("message", (message) => {
-    if (!clients[socket.id].name) {
-      // no name? no forward!
-      return;
-    }
     console.log("message", message);
-    io.sockets.emit(`message`, clients[socket.id], message);
+    if (message && clients[socket.id] && message && clients[socket.id].name) {
+      io.sockets.emit(`message`, clients[socket.id], message);
+    }
   });
 
   socket.on("disconnect", () => {
