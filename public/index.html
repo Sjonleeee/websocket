@@ -9,7 +9,7 @@
       html,
       body {
         height: 100%;
-        
+
         text-align: center;
       }
       body {
@@ -32,8 +32,6 @@
 
       .screen--visible {
         display: flex;
-        flex-direction: column;
-        flex: 1 1 100%;
       }
     </style>
   </head>
@@ -53,7 +51,7 @@
     </div>
 
     <!-- Form -->
-    <div class="screen">
+    <div id="screenMessage" class="screen">
       <form id="msgForm" method="post" action="">
         <input
           id="msgInput"
@@ -71,6 +69,8 @@
     const $msgForm = document.getElementById("msgForm");
     const $msgInput = document.getElementById("msgInput");
     const $messages = document.getElementById("messages");
+    const $screenName = document.getElementById("screenName");
+    const $screenMessage = document.getElementById("screenMessage");
 
     // User
     const $nameForm = document.getElementById("nameForm");
@@ -80,6 +80,7 @@
 
     const handleSubmit = (e) => {
       e.preventDefault();
+      console.log("faggot");
       if (socket.connected) {
         socket.emit("name", $nameInput.value);
         socket.emit(`message`, $msgInput.value);
@@ -93,14 +94,22 @@
       socket.on("connect", () => {
         console.log(`Connected: ${socket.id}`);
       });
-
-      $msgForm.addEventListener("submit", (e) => handleSubmit(e));
-      $nameForm.addEventListener("submit", (e) => handleSubmit(e));
-
       socket.on("message", (sender, message) => {
         console.log(`${sender.name}: ${message}`);
         $messages.value += `${sender.name}: ${message}\n`;
       });
+
+      socket.on("name-error", (error) => {
+        console.error("Error");
+      });
+
+      socket.on("name", (client) => {
+        console.log("Your are now named", client.name);
+        $screenMessage.classList.add("screen--visible");
+      });
+
+      $msgForm.addEventListener("submit", (e) => handleSubmit(e));
+      $nameForm.addEventListener("submit", (e) => handleSubmit(e));
     };
 
     init();
