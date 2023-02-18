@@ -5,25 +5,66 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sockets Server</title>
+    <style>
+      html,
+      body {
+        height: 100%;
+        
+        text-align: center;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+      #msgForm,
+      #messages {
+        flex: 1 1 100%;
+      }
+      #msgForm {
+        flex-basis: auto;
+        margin-bottom: 1em;
+      }
+      .screen {
+        display: none;
+        flex-direction: column;
+        flex: 1 1 100%;
+      }
+
+      .screen--visible {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 100%;
+      }
+    </style>
   </head>
   <body>
-    <h1>Sockets Server</h1>
-    <!-- Username -->
-    <form id="nameForm" method="post" action="">
-      <input
-        id="nameInput"
-        type="text"
-        name="nameInput"
-        placeholder="your name"
-      />
-      <button type="submit">Connect</button>
-    </form>
+    <div id="screenName" class="screen screen--visible">
+      <h1>Sockets Server</h1>
+      <!-- Username -->
+      <form id="nameForm" method="post" action="">
+        <input
+          id="nameInput"
+          type="text"
+          name="nameInput"
+          placeholder="your name"
+        />
+        <button type="submit">Connect</button>
+      </form>
+    </div>
+
     <!-- Form -->
-    <form id="msgForm" method="post" action="">
-      <input id="msgInput" type="text" name="msgInput" placeholder="your message" />
-      <button type="submit">Send Message</button>
-    </form>
-    <textarea id="messages"></textarea>
+    <div class="screen">
+      <form id="msgForm" method="post" action="">
+        <input
+          id="msgInput"
+          type="text"
+          name="msgInput"
+          placeholder="your message"
+        />
+        <button type="submit">Send Message</button>
+      </form>
+      <textarea id="messages"></textarea>
+    </div>
   </body>
   <script src="/socket.io/socket.io.js"></script>
   <script>
@@ -54,10 +95,11 @@
       });
 
       $msgForm.addEventListener("submit", (e) => handleSubmit(e));
+      $nameForm.addEventListener("submit", (e) => handleSubmit(e));
 
       socket.on("message", (sender, message) => {
-        console.log(`<${sender.name}> ${message}`);
-        $messages.value += `<${sender.name}> ${message}\n`;
+        console.log(`${sender.name}: ${message}`);
+        $messages.value += `${sender.name}: ${message}\n`;
       });
     };
 
