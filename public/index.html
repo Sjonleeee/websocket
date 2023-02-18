@@ -20,12 +20,7 @@
     </form>
     <!-- Form -->
     <form id="msgForm" method="post" action="">
-      <input
-        id="msgInput"
-        type="text"
-        name="msgInput"
-        placeholder="your message"
-      />
+      <input id="msgInput" type="text" name="msgInput" placeholder="your message" />
       <button type="submit">Send Message</button>
     </form>
     <textarea id="messages"></textarea>
@@ -43,7 +38,6 @@
     let socket; // will be assigned a value later
 
     const handleSubmit = (e) => {
-      console.log(handleSubmit());
       e.preventDefault();
       if (socket.connected) {
         socket.emit("name", $nameInput.value);
@@ -53,14 +47,13 @@
       $msgInput.value = ``;
     };
 
-    socket = io.connect("/");
     const init = () => {
+      socket = io.connect("/");
       socket.on("connect", () => {
         console.log(`Connected: ${socket.id}`);
       });
 
       $msgForm.addEventListener("submit", (e) => handleSubmit(e));
-      $nameForm.addEventListener("submit", (e) => handleSubmit(e));
 
       socket.on("message", (sender, message) => {
         console.log(`<${sender.name}> ${message}`);
